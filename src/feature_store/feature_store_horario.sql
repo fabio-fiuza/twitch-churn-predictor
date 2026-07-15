@@ -79,7 +79,7 @@ tb_share AS (
                 AND hour < 12 THEN 1
                 ELSE 0
             END
-        ) / SUM(1) AS pctTransacrionsMorning,
+        ) / SUM(1) AS pctTransactionsMorning,
         1.0 * SUM(
             CASE
                 WHEN hour >= 12
