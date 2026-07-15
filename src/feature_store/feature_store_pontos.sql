@@ -92,5 +92,6 @@ tb_join AS (
     FROM tb_pontos_d AS t1
         LEFT JOIN tb_vida AS t2 ON t1.idCustomer = t2.idCustomer
 )
-SELECT *
+SELECT '{date}' AS dtRef,
+    *
 from tb_join
