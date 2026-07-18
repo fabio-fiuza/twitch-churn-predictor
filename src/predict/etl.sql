@@ -1,25 +1,10 @@
-WITH tb_fl_churn AS (
-    SELECT t1.dtRef,
-        t1.idCustomer,
-        CASE
-            WHEN t2.idCustomer IS NULL THEN 1
-            ELSE 0
-        END AS flChurn
-    FROM feature_store_general AS t1
-        LEFT JOIN feature_store_general AS t2 ON t1.idCustomer = t2.idCustomer
-        AND t1.dtRef = DATE(t2.dtRef, '-21 day')
-    WHERE t1.dtRef < DATE('2024-06-07', '-21 day')
-        AND STRFTIME('%d', t1.dtRef) = '01'
-        OR t1.dtRef = DATE('2024-06-07', '-21 day')
-    ORDER BY 1,
-        2
-)
-SELECT t1.*,
-    t2.recenciaDias,
-    t2.frequenciaDias,
-    t2.valorPoints,
-    t2.idadeBaseDias,
-    t2.flEmail,
+SELECT t1.dtRef,
+    t1.idCustomer,
+    t1.recenciaDias,
+    t1.frequenciaDias,
+    t1.valorPoints,
+    t1.idadeBaseDias,
+    t1.flEmail,
     t3.quantityPointsMorning,
     t3.quantityPointsAfternoon,
     t3.quantityPointsEvening,
@@ -77,9 +62,7 @@ SELECT t1.*,
     t6.maxLiveMinutes,
     t6.quantityTransactionLive,
     t6.avgTransactionDay
-FROM tb_fl_churn AS t1
-    LEFT JOIN feature_store_general AS t2 ON t1.idCustomer = t2.idCustomer
-    AND t1.dtRef = t2.dtRef
+FROM feature_store_general AS t1
     LEFT JOIN feature_store_horario AS t3 ON t1.idCustomer = t3.idCustomer
     AND t1.dtRef = t3.dtRef
     LEFT JOIN feature_store_pontos AS t4 ON t1.idCustomer = t4.idCustomer
@@ -87,4 +70,8 @@ FROM tb_fl_churn AS t1
     LEFT JOIN feature_store_produtos AS t5 ON t1.idCustomer = t5.idCustomer
     AND t1.dtRef = t5.dtRef
     LEFT JOIN feature_store_transacoes AS t6 ON t1.idCustomer = t6.idCustomer
-    AND t1.dtRef = t6.dtRef;
+    AND t1.dtRef = t6.dtRef
+WHERE t1.dtRef = (
+        SELECT MAX(dtRef)
+        FROM feature_store_general
+    )
