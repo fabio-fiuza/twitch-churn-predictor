@@ -1,0 +1,9 @@
+database:
+  path: "../../data/feature_store.db"
+ 
+abt:
+  query_path: "abt_churn_21d.sql"
+  target: "fl_churn"
+ 
+model:
+  output_path: "../../model/baseline.pkl"
