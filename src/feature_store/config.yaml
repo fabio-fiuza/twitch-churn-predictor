@@ -1,0 +1,33 @@
+# Configuração do pipeline de ingestão de feature stores
+
+database:
+  origin_path: "../../data/database.db"
+  target_path: "../../data/feature_store.db"
+
+pipeline:
+  date_format: "%Y-%m-%d"
+  queries_dir: "queries"   # diretório onde os arquivos .sql das feature stores estão salvos
+
+# Feature stores conhecidas pelo pipeline.
+# Adicionar uma nova feature store aqui evita repetir --feature_store toda vez
+# e permite rodar todas de uma vez com --all.
+feature_stores:
+  - name: fs_cliente_rfv_21d
+    description: "Recência, frequência e valor do cliente (21 dias)"
+    enabled: true
+
+  - name: fs_cliente_periodo_dia_21d
+    description: "Distribuição de compras do cliente por período do dia (21 dias)"
+    enabled: true
+
+  - name: fs_cliente_pontos_21d
+    description: "Movimentação de pontos do cliente (saldo, acumulado, resgatado) em múltiplas janelas"
+    enabled: true
+
+  - name: fs_cliente_produto_21d
+    description: "Perfil de consumo de produtos do cliente (21 dias)"
+    enabled: true
+
+  - name: fs_cliente_engajamento_21d
+    description: "Frequência e duração de sessões/lives do cliente (21 dias)"
+    enabled: true
