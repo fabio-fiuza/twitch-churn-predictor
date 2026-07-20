@@ -1,0 +1,25 @@
+# Configuração do pipeline de ingestão de feature stores
+
+database:
+  origin_path: "../../data/database.db"
+  target_path: "../../data/feature_store.db"
+
+pipeline:
+  date_format: "%Y-%m-%d"
+  queries_dir: "queries"
+
+feature_stores:
+  - name: fs_cliente_rfv_21d
+    enabled: true
+
+  - name: fs_cliente_periodo_dia_21d
+    enabled: true
+
+  - name: fs_cliente_pontos_21d
+    enabled: true
+
+  - name: fs_cliente_produto_21d
+    enabled: true
+
+  - name: fs_cliente_engajamento_21d
+    enabled: true
