@@ -1,0 +1,90 @@
+WITH tb_fl_churn AS (
+    SELECT t1.dt_ref,
+        t1.id_customer,
+        CASE
+            WHEN t2.id_customer IS NULL THEN 1
+            ELSE 0
+        END AS fl_churn
+    FROM fs_cliente_rfv_21d AS t1
+        LEFT JOIN fs_cliente_rfv_21d AS t2 ON t1.id_customer = t2.id_customer
+        AND t1.dt_ref = DATE(t2.dt_ref, '-21 day')
+    WHERE t1.dt_ref < DATE('2024-06-07', '-21 day')
+        AND STRFTIME('%d', t1.dt_ref) = '01'
+        OR t1.dt_ref = DATE('2024-06-07', '-21 day')
+    ORDER BY 1,
+        2
+)
+SELECT t1.*,
+    t2.min_transacao_recencia_dias_21d,
+    t2.count_transacao_dias_distintos_21d AS count_transacao_dias_distintos_rfv_21d,
+    t2.sum_transacao_pontos_positivos_21d,
+    t2.max_cliente_idade_relacionamento_dias_total,
+    t2.fl_cliente_email_valido,
+    t3.sum_transacao_pontos_manha_21d,
+    t3.sum_transacao_pontos_tarde_21d,
+    t3.sum_transacao_pontos_noite_21d,
+    t3.pct_transacao_pontos_manha_21d,
+    t3.pct_transacao_pontos_tarde_21d,
+    t3.pct_transacao_pontos_noite_21d,
+    t3.count_transacao_qtd_manha_21d,
+    t3.count_transacao_qtd_tarde_21d,
+    t3.count_transacao_qtd_noite_21d,
+    t3.pct_transacao_qtd_manha_21d,
+    t3.pct_transacao_qtd_tarde_21d,
+    t3.pct_transacao_qtd_noite_21d,
+    t4.sum_transacao_pontos_saldo_21d,
+    t4.sum_transacao_pontos_saldo_14d,
+    t4.sum_transacao_pontos_saldo_7d,
+    t4.sum_transacao_pontos_acumulados_21d,
+    t4.sum_transacao_pontos_acumulados_14d,
+    t4.sum_transacao_pontos_acumulados_7d,
+    t4.sum_transacao_pontos_resgatados_21d,
+    t4.sum_transacao_pontos_resgatados_14d,
+    t4.sum_transacao_pontos_resgatados_7d,
+    t4.sum_transacao_pontos_saldo_total,
+    t4.sum_transacao_pontos_acumulados_total,
+    t4.sum_transacao_pontos_resgatados_total,
+    t4.avg_transacao_pontos_acumulados_dia_total,
+    t5.sum_produto_qtd_chat_mensagem_21d,
+    t5.sum_produto_qtd_lista_presenca_21d,
+    t5.sum_produto_qtd_resgate_ponei_21d,
+    t5.sum_produto_qtd_troca_pontos_streamelements_21d,
+    t5.sum_produto_qtd_presenca_streak_21d,
+    t5.sum_produto_qtd_airflow_lover_21d,
+    t5.sum_produto_qtd_r_lover_21d,
+    t5.sum_produto_pontos_chat_mensagem_21d,
+    t5.sum_produto_pontos_lista_presenca_21d,
+    t5.sum_produto_pontos_resgate_ponei_21d,
+    t5.sum_produto_pontos_troca_pontos_streamelements_21d,
+    t5.sum_produto_pontos_presenca_streak_21d,
+    t5.sum_produto_pontos_airflow_lover_21d,
+    t5.sum_produto_pontos_r_lover_21d,
+    t5.pct_produto_qtd_chat_mensagem_21d,
+    t5.pct_produto_qtd_lista_presenca_21d,
+    t5.pct_produto_qtd_resgate_ponei_21d,
+    t5.pct_produto_qtd_troca_pontos_streamelements_21d,
+    t5.pct_produto_qtd_presenca_streak_21d,
+    t5.pct_produto_qtd_airflow_lover_21d,
+    t5.pct_produto_qtd_r_lover_21d,
+    t5.avg_produto_qtd_chat_mensagem_por_dia_live_21d,
+    t5.top_produto_qtd_nome_21d,
+    t6.count_transacao_dias_distintos_21d AS count_transacao_dias_distintos_engajamento_21d,
+    t6.count_transacao_dias_distintos_14d,
+    t6.count_transacao_dias_distintos_7d,
+    t6.avg_live_duracao_minutos_21d,
+    t6.sum_live_duracao_minutos_21d,
+    t6.min_live_duracao_minutos_21d,
+    t6.max_live_duracao_minutos_21d,
+    t6.count_transacao_qtd_total,
+    t6.avg_transacao_qtd_dia_total
+FROM tb_fl_churn AS t1
+    LEFT JOIN fs_cliente_rfv_21d AS t2 ON t1.id_customer = t2.id_customer
+    AND t1.dt_ref = t2.dt_ref
+    LEFT JOIN fs_cliente_periodo_dia_21d AS t3 ON t1.id_customer = t3.id_customer
+    AND t1.dt_ref = t3.dt_ref
+    LEFT JOIN fs_cliente_pontos_21d AS t4 ON t1.id_customer = t4.id_customer
+    AND t1.dt_ref = t4.dt_ref
+    LEFT JOIN fs_cliente_produto_21d AS t5 ON t1.id_customer = t5.id_customer
+    AND t1.dt_ref = t5.dt_ref
+    LEFT JOIN fs_cliente_engajamento_21d AS t6 ON t1.id_customer = t6.id_customer
+    AND t1.dt_ref = t6.dt_ref;
