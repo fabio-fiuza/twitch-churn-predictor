@@ -1,0 +1,11 @@
+database:
+  path: "../../data/feature_store.db"
+
+model:
+  path: "../../model/baseline.pkl"
+
+etl:
+  query_path: "etl_churn_scoring.sql"
+
+output:
+  table: "tb_churn"
